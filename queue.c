@@ -28,12 +28,12 @@ int queue_size (queue_t *queue) {
 // - o elemento nao deve estar em outra fila
 // Retorno: 0 se sucesso, <0 se ocorreu algum erro
 
-int queue_append (queue_t **queue, queue_t *elem) {
+void queue_append (queue_t **queue, queue_t *elem) {
     
     if (!(*queue)) { // Se a fila estiver vazia
         *queue = elem;
         (*queue)->next = (*queue)->prev = *queue;
-        return 0;
+        return;
     }
         
     queue_t *aux = *queue;
@@ -45,8 +45,6 @@ int queue_append (queue_t **queue, queue_t *elem) {
     elem->prev = aux;
     elem->next = *queue;
     aux->next = elem;
-
-    return 0;
 }
 
 //------------------------------------------------------------------------------
@@ -57,7 +55,7 @@ int queue_append (queue_t **queue, queue_t *elem) {
 // - o elemento deve existir
 // - o elemento deve pertencer a fila indicada
 // Retorno: 0 se sucesso, <0 se ocorreu algum erro
-int queue_remove (queue_t **queue, queue_t *elem) {
+void queue_remove (queue_t **queue, queue_t *elem) {
 
 
     if (elem == *queue) { // Caso de elem ser o primeiro elemento da lista
@@ -71,7 +69,7 @@ int queue_remove (queue_t **queue, queue_t *elem) {
             *queue = (*queue)->next;
         }
         elem->next = elem->prev = NULL;
-        return 0;
+        return;
     }
 
     queue_t *aux = *queue;
@@ -81,10 +79,7 @@ int queue_remove (queue_t **queue, queue_t *elem) {
             aux->prev->next = aux->next;
             aux->next->prev = aux->prev;
             elem->next = elem->prev = NULL;
-            return 0;
+            return;
         }
     }
-
-    perror("### O elemento nao esta na fila ###");
-    return 1;
 }

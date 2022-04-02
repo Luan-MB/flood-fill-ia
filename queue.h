@@ -7,7 +7,7 @@ typedef struct queue_t {
 } queue_t ;
 
 int queue_size (queue_t *queue);
-int queue_append (queue_t **queue, queue_t *elem);
-int queue_remove (queue_t **queue, queue_t *elem) ;
+void queue_append (queue_t **queue, queue_t *elem);
+void queue_remove (queue_t **queue, queue_t *elem) ;
 
 #endif
