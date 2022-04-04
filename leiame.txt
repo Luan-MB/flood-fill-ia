@@ -1,0 +1,63 @@
+Luan Machado Bernardt | GRR20190363
+
+Primeiro Trabalho de Inteligência Artificial - Flood-fill Solver
+
+    Nesse arquivo são descritos os detalhes de minha implementação de um resolvedor de flood-fill, 
+utilizando um dos métodos de busca vistos em aula.
+
+Algoritmo de Busca:
+
+    Fez-se uso do algoritmo de Busca de Custo Uniforme (UCS), cuja característica é que os custos
+dos "caminhos" são sempre os mesmos. Optou-se pelo algoritmo descrito, pelo fato de que após inúmeras
+tentativas de implementar o solver com o A*, não consegui fazer com que o mesmo executasse dentro do limite
+de tempo imposto. (Provavelmente por algum problema na minha implementação, como minha estrutura de dados).
+    A busca ocorre em uma fila de estados que são gerados a cada exepansão de outro estado, os estados são escolhidos
+de acordo com o valor da heurística para o mesmo, sendo o com menor valor h escolhido primeiro.
+    Quando um estado da fila é escolhido para ser expandido, analisa-se se o mesmo é um estado solução, caso seja, 
+mostra o caminho feito até ali voltando até o estado inicial. Se não for solução, cria-se nodos para as cores que 
+aparecem na fronteira da região principal. 
+
+Função Heurística:
+
+    A função heurística utilizada, foi a do número de regiões no mapa, sendo assim, quanto mais perto da 
+solução, 1 região apenas, a heurística dimnui. O número de regiões é contado da seguinte maneira:
+
+    Para um exemplo 5 x 5 com 4 cores:
+
+    2 3 4 4 1           1  2  3  3  4         
+    2 1 3 3 1           1  5  6  6  4
+    3 4 2 2 4   --->    2  7  8  8  9
+    1 3 2 3 1           10 11 8  12 13
+    2 2 2 3 1           8  8  8  12 13
+
+    Nota-se que existem 13 regiões no total, algumas delas englobam células de mesma cor adjacentes (caso da região 8),
+outras englobam mais de uma célula que não são adjacentes (região 2), isso ocorre, devido ao fato de que essas duas células,
+serão adicionadas a região principal se um flood com a cor 2 for realizado, ou seja, é necessário apenas um movimento para 
+adicionar ambas a região principal. 
+    Para cada cor diferente na fronteira da região principal é criado um estado, que recebe uma versão do mapa após o flood
+com sua respectiva cor, após isso o valor de h é calculado para a nova região, por fim adicona-se o estado na fila de estados abertos.
+
+Arquivos:
+
+globalvars.h - Armazena as variáveis que são utilizadas pela maioria das funções como, número de cores e dimensões do jogo.
+
+types.h - Define os tipos cell (célula do mapa) e state (estado).
+
+heuristic.h - Define o cabeçalho da função de heurística de cálculo das regiões.
+heuristic.c - Implementa a função heurística, bem como as função necessárias para calculá-la.
+
+queue.h - Define um tipo genérico de fila circular, pode ser utilizado por qualquer estrutura de dados que possua os nodos prev e next
+nas primeiras posições.
+queue.c - Implementa as operações de inserção, remoção e tamanho de fila circular.
+
+flood.c - Arquivo principal, implementa as funções de flood, criação de estados e busca, essenciais para encontrar a solução.
+
+Tempo:
+
+    Como dito anteriormente, foi tentado implementar a busca do A*, no entanto sem sucesso, então optou-se por trocar o parâmetro
+que é comparado para escolher o melhor nodo, que passou do f = g + h, para apenas h. Com isso, diminuiu-se dráticamente o tempo,
+passando de resolver em 5 minutos para apenas 3 segundos. No entanto, sabe-se que a solução não será tão perto da ótima como no A*,
+pois o UCS não faz backtracking como o A*, porém esse é um preço a se pagar. 
+    O objetivo principal da implementação era bater o algoritmo floodit_h2 cedido pelo professor, o que foi alcançado com sucesso.
+
+

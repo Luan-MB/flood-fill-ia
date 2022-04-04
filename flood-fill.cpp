@@ -4,14 +4,22 @@
 #include <list>
 using namespace std;
 
-typedef struct t_square {
+typedef struct cell {
 
     short color;
     bool checked;
 
-} t_square;
+} cell;
 
-t_square *game;
+typedef struct state {
+
+    cell *state_board;
+    int *state_frontier;
+    int h;
+} state;
+
+
+cell *game;
 
 int *coloroccurences;
 int height, width, colors;
@@ -132,9 +140,11 @@ void check_region (int x, int y, short color) {
     
 }
 
-int region_counter (t_square *game, int height, int width) {
+int region_counter (cell *game, int height, int width) {
 
-    int num_regions = 0;
+    int num_regions = 1;
+
+    check_border(0, 0, game[0].color);
     
     for (int i=0; i<height; ++i) {
         for (int j=0; j<width; ++j) {
@@ -149,6 +159,13 @@ int region_counter (t_square *game, int height, int width) {
                 check_region(i, j-1, game[index].color);
             }
         }
+    }
+
+    printf("%d\n", num_regions);
+    for (int i=0; i<colors; i++) {
+        printf("%d ", coloroccurences[i]);
+        if(coloroccurences[i])
+            num_regions++;
     }
 
     return num_regions;
@@ -181,7 +198,7 @@ int main () {
 
     cin >> height >> width >> colors;
 
-    game = (t_square *) malloc(height * width * sizeof(t_square));
+    game = (cell *) malloc(height * width * sizeof(cell));
     for (int i=0; i<height; ++i)
         for (int j=0; j<width; ++j) {
             cin >> game[i * width + j].color;
